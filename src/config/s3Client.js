@@ -11,5 +11,5 @@ const s3Config = {
   },
 };
 
-
 export const s3 = new S3Client(s3Config);
+export const bucketName = process.env.S3_BUCKET_NAME;
