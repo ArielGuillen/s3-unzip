@@ -1,5 +1,5 @@
 # Description
-This node script decompresses a Zip file found in an S3 bucket and uploads its contents back to the same Bucket.The script uses AWS SDK to access the S3 bucket and the JSZIP bookstore to decompress the ZIP file.
+This node script decompresses a Zip file found in an S3 bucket and uploads its contents back to the same Bucket. The script uses AWS SDK to access the S3 bucket and the JSZIP module to decompress the ZIP file.
 
 # Setting
 Before using this script, you must make sure you have the following:
