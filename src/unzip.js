@@ -9,7 +9,7 @@ import mime from "mime-types";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import { s3, bucketName } from "./config/s3Client.js";
+import { s3, bucketName, bucketpath } from "./config/s3Client.js";
 
 export async function unzipS3File(path, filename) {
   const zipFile = await unzip(path, filename);
@@ -21,9 +21,10 @@ async function unzip(path, filename) {
   // Download the zip file from the Bucket of Origin
   try {
     const command = new GetObjectCommand({
-      Bucket: bucketName,
-      Key: `${process.env.S3_PATH}${path}${filename}.zip`,
+      Bucket: bucketName;
+      Key: `${bucketpath}${path}${filename}.zip`,
     });
+
     const { Body: data } = await s3.send(command);
 
     // Decompresses the zip file in memory
@@ -38,10 +39,10 @@ async function unzip(path, filename) {
   }
 }
 
-async function upload(buffer, path, zipname) {
+async function upload(zipFile, path, zipname) {
   try {
     // Decompresses the zip file in memory
-    const zip = await JSZip.loadAsync(buffer);
+    const zip = await JSZip.loadAsync(zipFile);
     const files = zip.file(/.*/);
 
     // itera on the files extracted and open to the destination bucket
@@ -49,7 +50,7 @@ async function upload(buffer, path, zipname) {
       const filename = file.name;
       const fileData = await file.async("nodebuffer");
       const mimeType = mime.lookup(file.name) || 'application/octet-stream';
-      const destinationKey = `${process.env.S3_PATH}${path}${zipname}/${filename}`;
+      const destinationKey = `${bucketpath}${path}${zipname}/${filename}`;
 
       const command = new PutObjectCommand({
         Bucket: bucketName,
